@@ -9,7 +9,7 @@ public class Main {
                 {false, false, false, true, true},
                 {false, false, false, false, false},
                 {false, false, false, false, false},
-                {false, false, false, false, false}};
+                {true, false, false, false, false}};
 
        GraphProcessing gp = new GraphProcessing(graph, 5);
        System.out.println(gp.getMinSchoolNumber());

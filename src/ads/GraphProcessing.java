@@ -24,11 +24,21 @@ public class GraphProcessing {
 
     private void findMinSchoolNumber(){
         dominants = new ArrayList<>();
+
+        boolean[] visited = new boolean[m_V];
+        Arrays.fill(visited, false);
+
         for (int u = 0; u < m_V; u++) {
+            if (visited[u])
+                continue;
             for (int v = 0; v < m_V; v++) {
-                if (bfs(u, v))
+                if (bfs(u, v)) {
                     dominants.remove(Integer.valueOf(v));
+                    visited[v] = true;
+                }
             }
+
+            if (!visited[u])
             dominants.add(u);
         }
         minSchoolNumber = dominants.size();
@@ -44,6 +54,8 @@ public class GraphProcessing {
      */
     private boolean bfs(int s, int t)
     {
+        if (s == t)
+            return false;
 
         // Create a visited array and mark all vertices as not
         // visited
