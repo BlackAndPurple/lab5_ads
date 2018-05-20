@@ -13,5 +13,6 @@ public class Main {
 
        GraphProcessing gp = new GraphProcessing(graph, 5);
        System.out.println(gp.getMinSchoolNumber());
+       System.out.println(gp.getExtensionsNumber());
     }
 }

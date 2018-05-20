@@ -8,8 +8,10 @@ public class GraphProcessing {
 
     private boolean[][] graph;
     private ArrayList<Integer> dominants;
+    private ArrayList<Integer> tDominants;  //dominants for transposed graph
     private int minSchoolNumber;
     private int m_V;
+    private int extensionsNumber;
 
     public GraphProcessing(boolean[][] graph, int V) {
         this.graph = graph;
@@ -17,13 +19,42 @@ public class GraphProcessing {
     }
 
     public int getMinSchoolNumber(){
-        if (dominants == null)
-            findMinSchoolNumber();
+        if (dominants == null){
+            dominants = new ArrayList<>();
+            findDominantsSet(dominants, graph);
+            minSchoolNumber = dominants.size();
+        }
         return minSchoolNumber;
     }
 
-    private void findMinSchoolNumber(){
-        dominants = new ArrayList<>();
+    public int getExtensionsNumber(){
+        if (dominants == null) {
+            dominants = new ArrayList<>();
+            findDominantsSet(dominants, graph);
+        }
+        if (tDominants == null) {
+            tDominants = new ArrayList<>();
+            findTransposedDominants();
+        }
+        //in case if we don't need more edges
+        if (dominants.size() == 1 && tDominants.size() == 1 && dominants.get(0).equals(tDominants.get(0)))
+            return 0;
+        return Math.max(dominants.size(), tDominants.size());
+    }
+
+    private void findTransposedDominants(){
+        //tDominants = new ArrayList<>();
+        boolean[][] tGraph = new boolean[m_V][m_V];
+        for (int i = 0; i < m_V; i++)
+            for (int j = 0; j < m_V; j++)
+                tGraph[i][j] = graph[j][i];
+        findDominantsSet(tDominants, tGraph);
+    }
+
+    /**
+     * Allows to find dominants set in order to get minimum school number
+     */
+    private void findDominantsSet(ArrayList<Integer> dominants, boolean[][] graph){
 
         boolean[] visited = new boolean[m_V];
         Arrays.fill(visited, false);
@@ -32,7 +63,7 @@ public class GraphProcessing {
             if (visited[u])
                 continue;
             for (int v = 0; v < m_V; v++) {
-                if (bfs(u, v)) {
+                if (bfs(graph, u, v)) {
                     dominants.remove(Integer.valueOf(v));
                     visited[v] = true;
                 }
@@ -41,18 +72,17 @@ public class GraphProcessing {
             if (!visited[u])
             dominants.add(u);
         }
-        minSchoolNumber = dominants.size();
     }
 
     /**
      * Returns true if there is a path from source 's' to sink
      * 't' in graph.
-     * path
+     * @param graph
      * @param s         Source
      * @param t         Sink
      * @return          True if t found. Otherwise false
      */
-    private boolean bfs(int s, int t)
+    private boolean bfs(boolean[][] graph, int s, int t)
     {
         if (s == t)
             return false;
@@ -67,7 +97,6 @@ public class GraphProcessing {
         LinkedList<Integer> queue = new LinkedList<>();
         queue.add(s);
         visited[s] = true;
-        //parent[s]=-1;
 
         // Standard BFS Loop
         while (queue.size()!=0)
@@ -79,7 +108,6 @@ public class GraphProcessing {
                 if (visited[v] == false && graph[u][v])
                 {
                     queue.add(v);
-                    //parent[v] = u;
                     visited[v] = true;
                 }
             }
