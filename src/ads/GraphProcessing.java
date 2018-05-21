@@ -42,8 +42,10 @@ public class GraphProcessing {
         return Math.max(dominants.size(), tDominants.size());
     }
 
+    /**
+     * Allows to find transposed dominants set
+     */
     private void findTransposedDominants(){
-        //tDominants = new ArrayList<>();
         boolean[][] tGraph = new boolean[m_V][m_V];
         for (int i = 0; i < m_V; i++)
             for (int j = 0; j < m_V; j++)
@@ -52,7 +54,7 @@ public class GraphProcessing {
     }
 
     /**
-     * Allows to find dominants set in order to get minimum school number
+     * Allows to find dominants set
      */
     private void findDominantsSet(ArrayList<Integer> dominants, boolean[][] graph){
 
@@ -77,7 +79,7 @@ public class GraphProcessing {
     /**
      * Returns true if there is a path from source 's' to sink
      * 't' in graph.
-     * @param graph
+     * @param graph     Graph precessed
      * @param s         Source
      * @param t         Sink
      * @return          True if t found. Otherwise false
@@ -105,7 +107,7 @@ public class GraphProcessing {
 
             for (int v=0; v<m_V; v++)
             {
-                if (visited[v] == false && graph[u][v])
+                if (!visited[v]&& graph[u][v])
                 {
                     queue.add(v);
                     visited[v] = true;
@@ -115,6 +117,6 @@ public class GraphProcessing {
 
         // If we reached sink in BFS starting from source, then
         // return true, else false
-        return (visited[t] == true);
+        return (visited[t]);
     }
 }
